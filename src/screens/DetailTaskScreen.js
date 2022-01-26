@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -10,24 +10,45 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useIndex from '../hooks';
+import {Context} from '../context/toDoContext';
 
 const DetailTaskScreen = ({route, navigation}) => {
-  const {item: theTask, index} = route.params;
-  const [value, setValue] = useState(theTask.task);
-  const {editTodoTask, deletesATodo, toggleCompletedTask} = useIndex();
+  const {item, index} = route.params;
+  const {state, editTodoTask, deleteTask, completeATask} = useContext(Context);
+  const {taskItems} = state;
+  const [value, setValue] = useState(item.task);
+  const [task, setTask] = useState(item);
+  // const {deletesATodo, toggleCompletedTask} = useIndex();
 
   const onChange = () => {
-    const data = {...theTask, task: value};
+    const data = {...task, task: value};
     console.log(data);
-    editTodoTask(data._id, data);
+    editTodoTask(data._id, data, () => setTask(data));
   };
 
   const onDelete = () => {
-    deletesATodo(theTask, () => navigation.goBack());
+    deleteTask(task._id, () => goBack());
+    // deletesATodo(task, () => navigation.goBack());
   };
 
   const goBack = () => {
     navigation.goBack();
+  };
+
+  const onDone = () => {
+    const data = {
+      ...task,
+      completed: !task.completed,
+    };
+    completeATask(data, () => setTask(data));
+  };
+
+  const doneButtonPress = () => {
+    if (task.completed) {
+      goBack();
+    } else {
+      onDone();
+    }
   };
 
   return (
@@ -58,13 +79,23 @@ const DetailTaskScreen = ({route, navigation}) => {
           />
         </KeyboardAvoidingView>
         <View>
-          <Text>Status</Text>
-          <Text
-            style={
-              theTask.completed ? styles.statusCompletedTask : styles.statusTask
-            }>
-            {theTask.completed ? 'Completed' : 'Ongoing'}
-          </Text>
+          <Text>Task Status</Text>
+          <View style={styles.statusView}>
+            <TouchableOpacity
+              onPress={() => onDone()}
+              style={{
+                ...styles.square,
+                ...(task.completed && styles.squareCompleted),
+              }}>
+              <Icon name="check" size={16} color="#F8F4FD" />
+            </TouchableOpacity>
+            <Text
+              style={
+                task.completed ? styles.statusCompletedTask : styles.statusTask
+              }>
+              {task.completed ? 'Completed' : 'Ongoing'}
+            </Text>
+          </View>
         </View>
       </View>
       <View style={styles.deleteViewWrapper}>
@@ -82,9 +113,11 @@ const DetailTaskScreen = ({route, navigation}) => {
       </View>
       <View>
         <TouchableOpacity
-          onPress={() => toggleCompletedTask(index)}
+          onPress={() => doneButtonPress()}
           style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>Done</Text>
+          <Text style={styles.buttonTextStyle}>
+            {task.completed ? 'Go Back' : 'Done'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -108,8 +141,24 @@ const styles = StyleSheet.create({
     marginTop: 48,
     marginBottom: 24,
   },
+  statusView: {display: 'flex', flexDirection: 'row'},
   statusTask: {
     color: '#77C66E',
+  },
+  square: {
+    minWidth: 24,
+    minHeight: 24,
+    padding: 4,
+    backgroundColor: 'transparent',
+    borderColor: '#BEB6BA',
+    borderWidth: 1,
+    opacity: 1,
+    borderRadius: 5,
+    marginRight: 15,
+  },
+  squareCompleted: {
+    borderWidth: 0,
+    backgroundColor: '#00A2DF',
   },
   statusCompletedTask: {
     color: '#FF6347',

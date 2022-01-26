@@ -15,7 +15,6 @@ const TaskWrapper = props => {
     taskItems,
     navigation,
     loading,
-    setLoading,
     partLoading,
     fetchTodo,
     toggleCompletedTask,
@@ -41,6 +40,8 @@ const TaskWrapper = props => {
       </View>
     );
   };
+
+  console.log(loading);
 
   const ItemView = ({item, index}) => {
     return (
@@ -84,7 +85,6 @@ const TaskWrapper = props => {
 
   return (
     <View style={styles.tasksWrapper}>
-      {/* <Text style={styles.sectionTitle}>Today's tasks</Text> */}
       <View style={styles.items}>
         {/* This is where the tasks will go! */}
         <FlatList
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   tasksWrapper: {
     paddingHorizontal: 20,
-    maxHeight: Dimensions.get('window').height - 250,
+    maxHeight: Dimensions.get('window').height - 350,
   },
   sectionTitle: {
     fontSize: 24,

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useContext} from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -23,8 +23,6 @@ export default function App({navigation}) {
     taskItems,
     loading,
     setLoading,
-    page,
-    setPage,
     partLoading,
     setPartLoading,
     AddTodo,
@@ -36,13 +34,6 @@ export default function App({navigation}) {
     Keyboard.dismiss();
     AddTodo();
   };
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const unsubscribe = fetchTodo();
-  //     return () => unsubscribe;
-  //   }, [isFocused]),
-  // );
 
   const EmptyTask = () => {
     return (
