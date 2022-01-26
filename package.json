@@ -14,7 +14,7 @@
     "@react-native-community/async-storage": "^1.12.1",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
-    "axios": "*",
+    "axios": "^0.25.0",
     "body-parser": "*",
     "dotenv": "^14.3.2",
     "express": "^4.17.2",

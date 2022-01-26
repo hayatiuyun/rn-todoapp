@@ -3,7 +3,9 @@ import axios from 'axios';
 //   baseURL: process.env.BASEURL_BACKEND,
 // });
 
-const API = axios.create({baseURL: 'https://d3b6-36-65-251-196.ngrok.io'});
+const API = axios.create({
+  baseURL: 'https://todoapp-reactnative.herokuapp.com',
+});
 
 API.interceptors.request.use(req => {
   //   console.log('req', req);
