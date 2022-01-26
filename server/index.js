@@ -3,7 +3,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3000;
 const db = require('./models/');
-
 app.use(bodyParser.json());
 
 function success(res, payload) {

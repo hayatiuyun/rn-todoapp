@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
+
 mongoose.connect(process.env.MONGO_URL, {
   // connecting to the mongodb database name: "todo-app" locally
   keepAlive: true, // keeping the connection alive
