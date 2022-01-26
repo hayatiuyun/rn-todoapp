@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3000;
 const db = require('./models/');
 app.use(bodyParser.json());
-
+/* success function */
 function success(res, payload) {
   console.log(payload);
   return res.status(200).json(payload);
