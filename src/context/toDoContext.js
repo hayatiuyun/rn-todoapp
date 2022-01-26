@@ -8,9 +8,11 @@ const initialState = {
 const taskReducer = (state, action) => {
   switch (action.type) {
     case 'get_todo':
-      const taskLists = action.payload.page
-        ? action.payload.res
-        : state.taskItems.concat(...action.payload.res);
+      const taskLists =
+        action.payload.page === 1
+          ? action.payload.res
+          : state.taskItems.concat(...action.payload.res);
+      console.log(taskLists);
       return {
         ...state,
         taskItems: taskLists,
@@ -32,6 +34,7 @@ const taskReducer = (state, action) => {
       return {...state, taskItems: stateTaskDup};
     case 'completes_todo':
       let restTask = [...state.taskItems];
+      console.log(action.payload);
       const indexDone = findIndexTaskItems(state.taskItems, action.payload._id);
       restTask[indexDone] = action.payload;
       return {...state, taskItems: restTask};
@@ -44,7 +47,7 @@ const findIndexTaskItems = (taskItems, _id) => {
   return taskItems.findIndex(element => element._id === _id);
 };
 
-const fetchTodo = dispatch => async (page, taskItems, cb, finallyCb) => {
+const fetchTodo = dispatch => async (page, cb, finallyCb) => {
   await getTodo(page)
     .then(data => {
       if (data.data.todo) {
@@ -64,11 +67,11 @@ const fetchTodo = dispatch => async (page, taskItems, cb, finallyCb) => {
     });
 };
 
-const editTodoTask = dispatch => async (index, data, taskItems, cbFinally) => {
-  await editTodo(index, data)
+const editTodoTask = dispatch => async (id, data, cbFinally) => {
+  await editTodo(id, data)
     .then(res => {
       console.log(res);
-      dispatch({type: 'update_todo', payload: res.data});
+      dispatch({type: 'update_todo', payload: {...res.data}});
     })
     .catch(err => console.log(err))
     .finally(() => cbFinally());
@@ -77,7 +80,8 @@ const editTodoTask = dispatch => async (index, data, taskItems, cbFinally) => {
 const completeATask = dispatch => async (data, cb) => {
   await editTodo(data._id, data)
     .then(res => {
-      dispatch({type: 'update_todo', payload: res.data.data});
+      console.log(res.data);
+      dispatch({type: 'completes_todo', payload: {...res.data}});
     })
     .catch(err => console.log(err))
     .finally(() => cb());
