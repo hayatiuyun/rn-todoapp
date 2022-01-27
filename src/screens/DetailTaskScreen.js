@@ -30,6 +30,14 @@ const DetailTaskScreen = ({route, navigation}) => {
     navigation.goBack();
   };
 
+  const doneButtonPress = () => {
+    if (theTask.completed) {
+      goBack();
+    } else {
+      toggleCompletedTask(index);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* View */}
@@ -82,9 +90,11 @@ const DetailTaskScreen = ({route, navigation}) => {
       </View>
       <View>
         <TouchableOpacity
-          onPress={() => toggleCompletedTask(index)}
+          onPress={() => doneButtonPress()}
           style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>Done</Text>
+          <Text style={styles.buttonTextStyle}>
+            {theTask.completed ? 'Go Back' : 'Done'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

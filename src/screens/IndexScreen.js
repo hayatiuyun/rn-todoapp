@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useContext} from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import TaskWrapper from '../components/TaskWrapper';
 import useIndex from '../hooks';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function App({navigation}) {
@@ -23,26 +22,17 @@ export default function App({navigation}) {
     taskItems,
     loading,
     setLoading,
-    page,
-    setPage,
     partLoading,
     setPartLoading,
     AddTodo,
     fetchTodo,
     toggleCompletedTask,
   } = useIndex();
-  const isFocused = useIsFocused;
+  // const isFocused = useIsFocused;
   const handleAddTask = async () => {
     Keyboard.dismiss();
     AddTodo();
   };
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const unsubscribe = fetchTodo();
-  //     return () => unsubscribe;
-  //   }, [isFocused]),
-  // );
 
   const EmptyTask = () => {
     return (

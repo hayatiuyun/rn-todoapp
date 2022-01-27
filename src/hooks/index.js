@@ -1,5 +1,6 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {getTodo, postTodo, editTodo, deleteTodo} from '../api/index';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 
 const useIndex = () => {
   const [task, setTask] = useState();
@@ -7,7 +8,7 @@ const useIndex = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [partLoading, setPartLoading] = useState(null);
-
+  const isFocused = useIsFocused;
   const AddTodo = async () => {
     const data = {
       task,
@@ -46,10 +47,12 @@ const useIndex = () => {
       ...taskItems[index],
       completed: !taskItems[index].completed,
     };
+    console.log(data);
     await editTodo(taskItems[index]._id, data)
       .then(res => {
         let itemsCopy = [...taskItems];
-        itemsCopy[index].completed = !taskItems[index].completed;
+        itemsCopy[index] = res.data;
+        console.log(itemsCopy);
         setTaskItems(itemsCopy);
       })
       .catch(err => console.log(err))
@@ -94,10 +97,15 @@ const useIndex = () => {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => {
-    const getData = fetchTodo();
-    return () => getData;
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      fetchTodo();
+      return () => {
+        isActive = false;
+      };
+    }, [isFocused]),
+  );
 
   return {
     task,
