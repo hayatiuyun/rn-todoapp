@@ -12,7 +12,7 @@ const useIndex = () => {
   } = useContext(Context);
   const {taskItems} = state;
 
-  const [task, setTask] = useState();
+  const [task, setTask] = useState('');
   // const [taskItems, setTaskItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
