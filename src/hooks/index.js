@@ -52,13 +52,6 @@ const useIndex = () => {
   const deletesATodo = async (index, cb) => {
     setLoading(true);
     await deleteTask(index._id, () => setLoading(false));
-    // setLoading(true);
-    // await deleteTodo(index._id)
-    //   .then(res => {
-    //     cb();
-    //   })
-    //   .catch(err => console.log(err))
-    //   .finally(() => setLoading(false));
   };
 
   useEffect(() => {
