@@ -1,4 +1,4 @@
-import {useEffect, useState, useContext} from 'react';
+import {useEffect, useState, useContext, useCallback} from 'react';
 import {Context} from '../context/toDoContext';
 
 const useIndex = () => {
@@ -16,7 +16,8 @@ const useIndex = () => {
   // const [taskItems, setTaskItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [partLoading, setPartLoading] = useState(null);
+  const [partLoading, setPartLoading] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
 
   const AddTodo = async () => {
     setLoading(true);
@@ -27,13 +28,17 @@ const useIndex = () => {
     );
   };
 
-  const fetchTodoList = async () => {
-    await fetchTodo(
-      page,
-      () => setPage(page + 1),
-      () => setLoading(false),
-    );
-  };
+  const fetchTodoList = useCallback(() => {
+    async () => {
+      if (isMounted) {
+        await fetchTodo(
+          page,
+          () => setPage(page + 1),
+          () => setLoading(false),
+        );
+      }
+    };
+  }, [page, isMounted, fetchTodo]);
 
   const toggleCompletedTask = async index => {
     setPartLoading(index);
@@ -55,10 +60,11 @@ const useIndex = () => {
   };
 
   useEffect(() => {
-    const getData = fetchTodo();
+    setIsMounted(true);
+    const getData = fetchTodoList();
     setLoading(false);
     return () => getData;
-  }, []);
+  }, [fetchTodoList]);
 
   return {
     task,
